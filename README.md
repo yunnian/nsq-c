@@ -4,3 +4,7 @@ Quick Start :
 
 1. cmake .
 2. make 
+
+Or :
+
+gcc test.c sub_client.c -o test

@@ -16,6 +16,7 @@ int main()
     msg = (struct NSQMessage *)malloc(sizeof(struct NSQMessage));
     msg->topic = "test";
     msg->channel = "struggle";
+    msg->rdy = 2;
     int (*msg_callback)(struct NSQMessage *msg) = msg_callback_m;
     subscribe(sock, msg,msg_callback);
 

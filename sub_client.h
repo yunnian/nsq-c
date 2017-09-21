@@ -14,6 +14,7 @@ struct NSQMessage {
     char *message_id;
     int32_t size;
     char *body;
+    int rdy;
 };
 struct NSQDConnection {
     char * topic;
