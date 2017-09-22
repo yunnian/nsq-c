@@ -39,19 +39,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/local/Cellar/cmake/3.9.1/bin/cmake
+CMAKE_COMMAND = /usr/local/Cellar/cmake/3.9.2/bin/cmake
 
 # The command to remove a file.
-RM = /usr/local/Cellar/cmake/3.9.1/bin/cmake -E remove -f
+RM = /usr/local/Cellar/cmake/3.9.2/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /data/c/nsq
+CMAKE_SOURCE_DIR = /data/c/struggle_nsq_c
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /data/c/nsq
+CMAKE_BINARY_DIR = /data/c/struggle_nsq_c
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /data/c/nsq
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/local/Cellar/cmake/3.9.1/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/local/Cellar/cmake/3.9.2/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -69,8 +69,8 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/local/Cellar/cmake/3.9.1/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/local/Cellar/cmake/3.9.2/bin/ccmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /data/c/nsq/CMakeFiles /data/c/nsq/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /data/c/struggle_nsq_c/CMakeFiles /data/c/struggle_nsq_c/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /data/c/nsq/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /data/c/struggle_nsq_c/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -136,32 +136,59 @@ pub_client.o/fast:
 	$(MAKE) -f CMakeFiles/pub_client.o.dir/build.make CMakeFiles/pub_client.o.dir/build
 .PHONY : pub_client.o/fast
 
-client.o: client.c.o
+pub_client.o: pub_client.c.o
 
-.PHONY : client.o
+.PHONY : pub_client.o
 
 # target to build an object file
-client.c.o:
-	$(MAKE) -f CMakeFiles/pub_client.o.dir/build.make CMakeFiles/pub_client.o.dir/client.c.o
-.PHONY : client.c.o
+pub_client.c.o:
+	$(MAKE) -f CMakeFiles/pub_client.o.dir/build.make CMakeFiles/pub_client.o.dir/pub_client.c.o
+.PHONY : pub_client.c.o
 
-client.i: client.c.i
+pub_client.i: pub_client.c.i
 
-.PHONY : client.i
+.PHONY : pub_client.i
 
 # target to preprocess a source file
-client.c.i:
-	$(MAKE) -f CMakeFiles/pub_client.o.dir/build.make CMakeFiles/pub_client.o.dir/client.c.i
-.PHONY : client.c.i
+pub_client.c.i:
+	$(MAKE) -f CMakeFiles/pub_client.o.dir/build.make CMakeFiles/pub_client.o.dir/pub_client.c.i
+.PHONY : pub_client.c.i
 
-client.s: client.c.s
+pub_client.s: pub_client.c.s
 
-.PHONY : client.s
+.PHONY : pub_client.s
 
 # target to generate assembly for a file
-client.c.s:
-	$(MAKE) -f CMakeFiles/pub_client.o.dir/build.make CMakeFiles/pub_client.o.dir/client.c.s
-.PHONY : client.c.s
+pub_client.c.s:
+	$(MAKE) -f CMakeFiles/pub_client.o.dir/build.make CMakeFiles/pub_client.o.dir/pub_client.c.s
+.PHONY : pub_client.c.s
+
+pub_test.o: pub_test.c.o
+
+.PHONY : pub_test.o
+
+# target to build an object file
+pub_test.c.o:
+	$(MAKE) -f CMakeFiles/pub_client.o.dir/build.make CMakeFiles/pub_client.o.dir/pub_test.c.o
+.PHONY : pub_test.c.o
+
+pub_test.i: pub_test.c.i
+
+.PHONY : pub_test.i
+
+# target to preprocess a source file
+pub_test.c.i:
+	$(MAKE) -f CMakeFiles/pub_client.o.dir/build.make CMakeFiles/pub_client.o.dir/pub_test.c.i
+.PHONY : pub_test.c.i
+
+pub_test.s: pub_test.c.s
+
+.PHONY : pub_test.s
+
+# target to generate assembly for a file
+pub_test.c.s:
+	$(MAKE) -f CMakeFiles/pub_client.o.dir/build.make CMakeFiles/pub_client.o.dir/pub_test.c.s
+.PHONY : pub_test.c.s
 
 sub_client.o: sub_client.c.o
 
@@ -190,32 +217,32 @@ sub_client.c.s:
 	$(MAKE) -f CMakeFiles/test.o.dir/build.make CMakeFiles/test.o.dir/sub_client.c.s
 .PHONY : sub_client.c.s
 
-test.o: test.c.o
+sub_test.o: sub_test.c.o
 
-.PHONY : test.o
+.PHONY : sub_test.o
 
 # target to build an object file
-test.c.o:
-	$(MAKE) -f CMakeFiles/test.o.dir/build.make CMakeFiles/test.o.dir/test.c.o
-.PHONY : test.c.o
+sub_test.c.o:
+	$(MAKE) -f CMakeFiles/test.o.dir/build.make CMakeFiles/test.o.dir/sub_test.c.o
+.PHONY : sub_test.c.o
 
-test.i: test.c.i
+sub_test.i: sub_test.c.i
 
-.PHONY : test.i
+.PHONY : sub_test.i
 
 # target to preprocess a source file
-test.c.i:
-	$(MAKE) -f CMakeFiles/test.o.dir/build.make CMakeFiles/test.o.dir/test.c.i
-.PHONY : test.c.i
+sub_test.c.i:
+	$(MAKE) -f CMakeFiles/test.o.dir/build.make CMakeFiles/test.o.dir/sub_test.c.i
+.PHONY : sub_test.c.i
 
-test.s: test.c.s
+sub_test.s: sub_test.c.s
 
-.PHONY : test.s
+.PHONY : sub_test.s
 
 # target to generate assembly for a file
-test.c.s:
-	$(MAKE) -f CMakeFiles/test.o.dir/build.make CMakeFiles/test.o.dir/test.c.s
-.PHONY : test.c.s
+sub_test.c.s:
+	$(MAKE) -f CMakeFiles/test.o.dir/build.make CMakeFiles/test.o.dir/sub_test.c.s
+.PHONY : sub_test.c.s
 
 # Help Target
 help:
@@ -227,15 +254,18 @@ help:
 	@echo "... edit_cache"
 	@echo "... test.o"
 	@echo "... pub_client.o"
-	@echo "... client.o"
-	@echo "... client.i"
-	@echo "... client.s"
+	@echo "... pub_client.o"
+	@echo "... pub_client.i"
+	@echo "... pub_client.s"
+	@echo "... pub_test.o"
+	@echo "... pub_test.i"
+	@echo "... pub_test.s"
 	@echo "... sub_client.o"
 	@echo "... sub_client.i"
 	@echo "... sub_client.s"
-	@echo "... test.o"
-	@echo "... test.i"
-	@echo "... test.s"
+	@echo "... sub_test.o"
+	@echo "... sub_test.i"
+	@echo "... sub_test.s"
 .PHONY : help
 
 
