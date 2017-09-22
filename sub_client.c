@@ -78,6 +78,7 @@ int subscribe(sock sock,struct NSQMessage *msg, (*msg_callback)(struct NSQMessag
 	char * v  = (char * ) malloc(4);
 	memcpy(v, "  V2", 4);
 	write(sock, v, 4);
+    free(v);
 	char b[120];
     size_t n;
 	char * msg2 ="SUB test Struggle ZhenyudeMacBook-Pro ZhenyudeMacBook-Pro.local\n";
@@ -130,7 +131,7 @@ int subscribe(sock sock,struct NSQMessage *msg, (*msg_callback)(struct NSQMessag
                 msg->body = (char * )malloc(msg->size-30);
                 memset(msg->body,'\0',msg->size-30);
                 memcpy(msg->body,message+30, msg->size-30);
-                printf("Message from server : %s \n", msg->body);
+                printf("Message from server 1: %s \n", msg->body);
                 char  ack[22] = "FIN " ;
                 printf("ack : %s \n", ack);
                 //strcat(ack, messageId);
@@ -138,15 +139,18 @@ int subscribe(sock sock,struct NSQMessage *msg, (*msg_callback)(struct NSQMessag
                 sprintf(ack,"FIN %s\n",msg->message_id);
                 printf("ack : %s \n", ack);
                 send(sock, ack,strlen(ack) ,0);
-                if(i<msg->rdy){
+                if(i< msg->rdy){
                     i++;
                 }else{
                     send(sock,rd,strlen(rd) ,0);  
                     i =0;
                 }
                 printf("attempts : %d \n", msg->attempts);
+                free(msg->body);
             }
-            memset(message,'\0',sizeof(message));
+            free(message);
+            free(msg_size);
+            free(msg->message_id);
             continue ;
         }else{
             printf("%s","1");
