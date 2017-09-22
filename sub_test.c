@@ -13,7 +13,7 @@ int msg_callback_m(struct NSQMessage *msg){
 int main()
 {
     int sock;
-    sock =  connect_nsqd_with_lookupd("127.0.0.1", "4150");
+    sock =  connect_nsqd_with_lookupd("127.0.0.1", "4150"); //现在只是 直连nsqd 的地址,lookupd地址支持 以后上
     struct NSQMessage *msg;
     msg = (struct NSQMessage *)malloc(sizeof(struct NSQMessage));
     msg->topic = "test";
