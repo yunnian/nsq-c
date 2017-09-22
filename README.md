@@ -1,7 +1,7 @@
 # struggle_nsq_c
 nsq client for c language
 
-####build
+#### build
 1. cmake .
 2. make 
 
@@ -12,9 +12,9 @@ sub : gcc test.c sub_client.c -o test
 pub : gcc -g  pub_test.c pub_client.c -o pub
 
 
-####Quick Start :
+#### Quick Start :
 
-#####example for pub:
+###### example for pub:
 
 ```
 
@@ -44,7 +44,7 @@ int main()
 ```
 
 
-example for sub: 
+###### example for sub: 
 ```
 
 #include<stdio.h>
