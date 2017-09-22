@@ -142,7 +142,7 @@ int subscribe(sock sock,struct NSQMessage *msg, int (*msg_callback)(struct NSQMe
             free(msg->message_id);
             continue ;
         }else{
-            printf("%s","1");
+            printf("%s","socket close");
             break ;
         }
         /*if (str_len == -1) {
