@@ -8,6 +8,7 @@ Quick Start :
 Or :
 
 sub : gcc test.c sub_client.c -o test
+
 pub : gcc -g  pub_test.c pub_client.c -o pub
 
 
