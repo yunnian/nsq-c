@@ -6,7 +6,10 @@
 
 int msg_callback_m(struct NSQMessage *msg){
 
+    printf("test message handler:%s\n", msg->body);
+    return 0;
 }
+
 
 int main()
 {
@@ -18,7 +21,8 @@ int main()
     msg->channel = "struggle";
     msg->rdy = 2;
     int (*msg_callback)(struct NSQMessage *msg) = msg_callback_m;
-    subscribe(sock, msg,msg_callback);
+    subscribe(sock, msg, msg_callback);
     free(msg);
 
 }
+
