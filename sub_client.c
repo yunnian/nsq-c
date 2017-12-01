@@ -121,8 +121,8 @@ int subscribe(sock sock,struct NSQMessage *msg, int (*msg_callback)(struct NSQMe
                 msg->timestamp = (int64_t)ntoh64((const unsigned char *)message+4);
                 readI16((const unsigned char *)message+12,  &msg->attempts);
                 memcpy(msg->message_id, message+14, 16);
-                msg->body = (char * )malloc(msg->size-30);
-                memset(msg->body,'\0',msg->size-30);
+                msg->body = (char * )malloc(msg->size-30+1);
+                memset(msg->body,'\0',msg->size-30+1);
                 memcpy(msg->body,message+30, msg->size-30);
                 char  ack[22] = "FIN " ;
                 //strcat(ack, messageId);
