@@ -15,6 +15,7 @@ struct NSQMessage {
     int32_t size;
     char *body;
     int rdy;
+    int (*callback)(struct NSQMessage *msg);
 };
 struct NSQDConnection {
     char * topic;
@@ -22,7 +23,6 @@ struct NSQDConnection {
 
 typedef int sock;
 //param is the nsqlookeupd's ip and port ,return the socket fd
-sock connect_nsqd_with_lookupd(const char *address, const char * port);
-int subscribe(sock, struct NSQMessage *msg, int (*msg_callback)(struct NSQMessage *msg));
+int subscribe(const char *address, const char * port, struct NSQMessage *msg);
 
 #endif //STRUGGLE_NSQ_SUB_CLIENT_H
