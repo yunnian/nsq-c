@@ -8,6 +8,11 @@
 #include<sys/socket.h>
 #include"sub_client.h"
 
+const int BUFFER_SIZE = 1024;  
+  
+void conn_writecb(struct bufferevent *, void *);  
+void conn_readcb(struct bufferevent *, void *);  
+void conn_eventcb(struct bufferevent *, short, void *);  
 void error_handling(char* message);
 
 void error_handling(char* message) {
@@ -42,19 +47,12 @@ uint64_t ntoh64(const uint8_t *data) {
 
 
 sock connect_nsqd_with_lookupd(const char *address, const char* port){
+    /*
     int sock;
     struct sockaddr_in serv_addr;
     // char message[2560];
     int str_len;
     memset(&serv_addr, 0, sizeof(serv_addr));
-
-    /*
-    if (argc != 3)
-    {
-        printf("Usage: /%s <IP> <Port>\n",argv[0]);
-        exit(1);
-    }
-    */
 
     //创建用于internet的流协议(TCP)socket
     sock = socket(PF_INET, SOCK_STREAM, 0);
@@ -73,6 +71,71 @@ sock connect_nsqd_with_lookupd(const char *address, const char* port){
         return 0;
     }
     return sock;
+    */
+    struct sockaddr_in srv;  
+    memset(&srv, 0, sizeof(srv));  
+    //srv.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");  
+    srv.sin_addr.s_addr = inet_addr(address);  
+    //sin.sin_addr.s_addr = htonl(0);
+    srv.sin_family = AF_INET;  
+    srv.sin_port = htons(port);  
+  
+    struct event_base *base = event_base_new();  
+    if (!base)  
+    {  
+        printf("Could not initialize libevent\n");  
+        return 1;  
+    }  
+  
+    struct bufferevent* bev = bufferevent_socket_new(base, -1,  
+                             BEV_OPT_CLOSE_ON_FREE);  
+    bufferevent_setcb(bev, conn_readcb, conn_writecb, conn_eventcb, NULL);  
+    int flag=bufferevent_socket_connect(bev, (struct sockaddr *)&srv,sizeof(srv));  
+    bufferevent_enable(bev, EV_READ | EV_WRITE);  
+    if(-1==flag)  
+    {  
+        printf("Connect failed\n");  
+        return 1;  
+    }  
+  
+    event_base_dispatch(base);  
+    event_base_free(base);  
+
+}
+
+
+
+
+void conn_eventcb(struct bufferevent *bev, short events, void *user_data)  
+{  
+    if (events & BEV_EVENT_EOF)  
+    {  
+        printf("Connection closed\n");  
+    }  
+    else if (events & BEV_EVENT_ERROR)  
+    {  
+        printf("Got an error on the connection: %s\n",strerror(errno));  
+    }  
+    else if( events & BEV_EVENT_CONNECTED)  
+    {  
+        printf("Connect succeed\n");  
+        //客户端链接成功后，给服务器发送第一条消息  
+        char *reply_msg = "I receive a message from client";  
+        bufferevent_write(bev, reply_msg, strlen(reply_msg));  
+        return ;  
+    }  
+     
+    bufferevent_free(bev);  
+}  
+
+void readcb(struct bufferevent *bev, void *ctx){
+    printf("called readcb!\n");  
+    struct evbuffer *input, *output;  
+    char *request_line;  
+    size_t len;  
+    input = bufferevent_get_input(bev);//其实就是取出bufferevent中的input  
+    output = bufferevent_get_output(bev);//其实就是取出bufferevent中的output  
+
 
 }
 
