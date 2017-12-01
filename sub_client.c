@@ -13,7 +13,7 @@ void error_handling(char* message);
 void error_handling(char* message) {
 	fputs(message, stderr);
 	fputc('\n', stderr);
-	exit(1);
+	//exit(1);
 }
 int readI16(const unsigned char * pData, uint16_t *pValue)
 {
@@ -70,6 +70,7 @@ sock connect_nsqd_with_lookupd(const char *address, const char* port){
     //把socket和socket地址结构联系起来
     if( connect(sock,(struct sockaddr*)&serv_addr,sizeof(serv_addr)) == -1) {
         error_handling("connect() error");
+        return 0;
     }
     return sock;
 
