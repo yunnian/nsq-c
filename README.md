@@ -73,10 +73,15 @@ int main()
 
 ###### Dependencies:
 
+```
+
 libevent
+
+```
 
 
 ###### TODO List:
+```
 
 1 根据lookupd 链接nsqd
 
@@ -85,5 +90,7 @@ The discover that Find nsqd according to lookupd
 2 多个topic连接支持
 
 Multiple topic connection
+
+```
 
 
