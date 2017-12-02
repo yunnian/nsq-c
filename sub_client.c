@@ -111,7 +111,7 @@ void conn_eventcb(struct bufferevent *bev, short events, void *user_data)
         n = sprintf(b, "%s", msg2);
         //send(sock, b,strlen(msg2) ,0);
         bufferevent_write(bev, b, strlen(msg2));  
-        char * rd =  "RDY 2\n";
+        //char * rd =  "RDY 2\n";
         //send(sock, rd,strlen(rd) ,0);
         //客户端链接成功后
         bufferevent_write(bev, rd, strlen(rd));  
@@ -133,70 +133,73 @@ void readcb(struct bufferevent *bev,void *msgArg){
      */
     errno = 0;
     int i = 0;
+    while(1){
 
-    //读取msg长度
-    char * msg_size = malloc(4);
-    memset(msg_size,0x00,4);
-    //int size_l =  read(sock, msg_size, 4);
-    size_t size_l = bufferevent_read(bev, msg_size, 4); 
-    readI32((const unsigned char *) msg_size ,  &msg->size);
+        //读取msg长度
+        char * msg_size = malloc(4);
+        memset(msg_size,0x00,4);
+        //int size_l =  read(sock, msg_size, 4);
+        size_t size_l = bufferevent_read(bev, msg_size, 4); 
+        readI32((const unsigned char *) msg_size ,  &msg->size);
 
-    //读取相应长度的msg内容
-    char * message = malloc(msg->size +1);
-    memset(message,0x00,msg->size);
-    //int l =  read(sock, message, msg->size);
-    int l =  bufferevent_read(bev, message, msg->size);
-    if (errno) {
-        printf("errno = %d\n", errno); // errno = 33
-        perror("sqrt failed"); // sqrt failed: Numerical argument out of domain
-        printf("error: %s\n", strerror(errno)); // error: Numerical argument out of domain
-    }
-    if(l){
-        msg->message_id = (char * )malloc(17);
-        memset(msg->message_id,'\0',17);
-        readI32((const unsigned char *)message, &msg->frame_type);
-
-        if(msg->frame_type == 0){
-            printf("%s","OK");
-            if(msg->size == 15){
-                //send(sock, "NOP\n",strlen("NOP\n") ,0);
-                bufferevent_write(bev, "NOP\n",strlen("NOP\n"));
-            }
-        }else if(msg->frame_type == 2){
-            msg->timestamp = (int64_t)ntoh64((const unsigned char *)message+4);
-            readI16((const unsigned char *)message+12,  &msg->attempts);
-            memcpy(msg->message_id, message+14, 16);
-            msg->body = (char * )malloc(msg->size-30+1);
-            memset(msg->body,'\0',msg->size-30+1);
-            memcpy(msg->body,message+30, msg->size-30);
-            char  ack[22] = "FIN " ;
-            //strcat(ack, messageId);
-            sprintf(ack,"FIN %s\n",msg->message_id);
-            //send(sock, ack,strlen(ack) ,0);
-            bufferevent_write(bev, ack, strlen(ack));  
-            if(i< msg->rdy){
-                i++;
-            }else{
-                //send(sock,rd,strlen(rd) ,0);  
-                char * rd =  "RDY 2\n";
-                bufferevent_write(bev,rd, strlen(rd));  
-                i =0;
-            }
-            msg->callback(msg);
-            free(msg->body);
+        //读取相应长度的msg内容
+        char * message = malloc(msg->size +1);
+        memset(message,0x00,msg->size);
+        //int l =  read(sock, message, msg->size);
+        int l =  bufferevent_read(bev, message, msg->size);
+        if (errno) {
+            printf("errno = %d\n", errno); // errno = 33
+            perror("sqrt failed"); // sqrt failed: Numerical argument out of domain
+            printf("error: %s\n", strerror(errno)); // error: Numerical argument out of domain
         }
-        free(message);
-        free(msg_size);
-        free(msg->message_id);
-    }
-    if (l == -1) {
-        error_handling("read() error");;
+        if(l){
+            msg->message_id = (char * )malloc(17);
+            memset(msg->message_id,'\0',17);
+            readI32((const unsigned char *)message, &msg->frame_type);
+
+
+            printf("type:%d",msg->frame_type);
+            if(msg->frame_type == 0){
+                printf("%s","OK");
+                if(msg->size == 15){
+                    //send(sock, "NOP\n",strlen("NOP\n") ,0);
+                    bufferevent_write(bev, "NOP\n",strlen("NOP\n"));
+                }
+            }else if(msg->frame_type == 2){
+                msg->timestamp = (int64_t)ntoh64((const unsigned char *)message+4);
+                readI16((const unsigned char *)message+12,  &msg->attempts);
+                memcpy(msg->message_id, message+14, 16);
+                msg->body = (char * )malloc(msg->size-30+1);
+                memset(msg->body,'\0',msg->size-30+1);
+                memcpy(msg->body,message+30, msg->size-30);
+                char  ack[22] = "FIN " ;
+                //strcat(ack, messageId);
+                sprintf(ack,"FIN %s\n",msg->message_id);
+                //send(sock, ack,strlen(ack) ,0);
+                bufferevent_write(bev, ack, strlen(ack));  
+                //send(sock,rd,strlen(rd) ,0);  
+                //char * rd =  "RDY 2\n";
+                //bufferevent_write(bev,rd, strlen(rd));  
+                msg->callback(msg);
+                free(msg->body);
+            }
+            free(message);
+            free(msg_size);
+            free(msg->message_id);
+        }else{
+            break;
+
+        }
+
+
+        if (l == -1) {
+            error_handling("read() error");;
+        }
     }
 
     //close(sock);
 
     //return 0;
-
 
 }
 void conn_writecb(struct bufferevent *bev, void *user_data)  
