@@ -5,7 +5,7 @@
 #ifndef STRUGGLE_NSQ_SUB_CLIENT_H
 #define STRUGGLE_NSQ_SUB_CLIENT_H
 
-struct NSQMessage {
+typedef struct NSQMsg {
     const char * topic;
     const char * channel;
     int32_t frame_type;
@@ -15,14 +15,15 @@ struct NSQMessage {
     int32_t size;
     char *body;
     int rdy;
-};
-struct NSQDConnection {
-    char * topic;
-};
+}NSQMsg;
 
-typedef int sock;
+typedef struct NSQArg{
+    NSQMsg *msg;
+    const char * host;
+    const char * port;
+    int (*callback)(NSQMsg *msg);
+}NSQArg;
 //param is the nsqlookeupd's ip and port ,return the socket fd
-sock connect_nsqd_with_lookupd(const char *address, const char * port);
-int subscribe(sock, struct NSQMessage *msg, int (*msg_callback)(struct NSQMessage *msg));
+int subscribe(const char *address, const char * port, struct NSQMsg *msg, int (*callback)(struct NSQMsg *msg));
 
 #endif //STRUGGLE_NSQ_SUB_CLIENT_H

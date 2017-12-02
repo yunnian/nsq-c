@@ -7,9 +7,10 @@ nsq client for c language
 
 Or :
 
-sub : gcc test.c sub_client.c -o test
 
-pub : gcc -g  pub_test.c pub_client.c -o pub
+sub : gcc  example_sub.c sub_client.c -o  sub_client -levent
+
+pub : gcc  example_pub.c pub_client.c -o pub_client
 
 
 #### Quick Start :
@@ -46,30 +47,24 @@ int main()
 
 ###### example for sub: 
 ```
-
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
 #include "sub_client.h"
 
-int msg_callback_m(struct NSQMessage *msg){
-
+int msg_callback_m(NSQMsg *msg){
     printf("test message handler:%s\n", msg->body);
     return 0;
 }
 
-
 int main()
 {
-    int sock;
-    sock =  connect_nsqd_with_lookupd("127.0.0.1", "4150"); //现在只是 直连nsqd 的地址,lookupd地址支持 以后上
-    struct NSQMessage *msg;
-    msg = (struct NSQMessage *)malloc(sizeof(struct NSQMessage));
+    struct NSQMsg *msg;
+    msg = malloc(sizeof(NSQMsg));
     msg->topic = "test";
-    msg->channel = "struggle";
+    msg->channel = "struggle_everyday";
     msg->rdy = 2;
-    int (*msg_callback)(struct NSQMessage *msg) = msg_callback_m;
-    subscribe(sock, msg, msg_callback);
+    subscribe("127.0.0.1", "4150", msg, &msg_callback_m); //现在只是 直连nsqd 的地址,lookupd地址支持 以后上
     free(msg);
 
 }
