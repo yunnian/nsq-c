@@ -1,5 +1,5 @@
-# struggle_nsq_c
-nsq client for c language
+#nsq-c  
+nsq client for c language  ,c 语言的nsq客户端
 
 #### build
 1. cmake .
