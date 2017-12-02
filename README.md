@@ -82,4 +82,6 @@ The discover that Find nsqd according to lookupd
 Multiple topic connection
 
 
+###### Dependencies:
+libevent
 
